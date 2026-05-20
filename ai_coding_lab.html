@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Masterclass — Coding Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Patrick+Hand&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F0F4F8;--paper:#FFFFFF;--ink:#1A1A2E;--ink2:#4A4A6A;
+  --blue:#A8D4F5;--blue-d:#5BA4CF;--blue-bg:#D6ECFA;
+  --yellow:#FDEEA3;--yellow-d:#F0C040;
+  --green:#B8EBC8;--green-d:#5CBF7E;--green-bg:#E0F8E8;
+  --pink:#F9C4C8;--pink-d:#E87080;--pink-bg:#FDEAEC;
+  --purple:#D4B8FF;--purple-d:#9B6DFF;
+  --orange:#FFD9A0;--orange-d:#F09030;
+  --teal:#A8E6E0;--teal-d:#2ABFB0;
+  --border:#CBD5E0;--shadow:rgba(26,26,46,0.10);
+  --code-bg:#1E1E2E;--code-text:#CDD6F4;
+  --code-kw:#CBA6F7;--code-fn:#89B4FA;--code-st:#A6E3A1;
+  --code-cm:#6C7086;--code-num:#FAB387;--code-var:#F38BA8;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"Patrick Hand",cursive;background:var(--bg);color:var(--ink);line-height:1.7;overflow-x:hidden;}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:repeating-linear-gradient(transparent,transparent 39px,rgba(100,120,180,0.08) 39px,rgba(100,120,180,0.08) 40px);}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:300;background:rgba(240,244,248,0.97);backdrop-filter:blur(12px);
+  border-bottom:2.5px solid var(--border);display:flex;align-items:center;
+  padding:0 1.5rem;gap:.3rem;overflow-x:auto;scrollbar-width:none;min-height:54px;}
+nav::-webkit-scrollbar{display:none;}
+.nav-logo{font-family:"Caveat",cursive;font-size:1.4rem;font-weight:700;color:var(--ink);
+  padding:.4rem 1rem .4rem 0;border-right:2px dashed var(--border);margin-right:.8rem;white-space:nowrap;flex-shrink:0;}
+.nav-logo span{background:var(--teal);padding:2px 10px;border-radius:8px;}
+nav a{font-family:"Caveat",cursive;font-size:.95rem;font-weight:600;color:var(--ink2);text-decoration:none;
+  padding:.3rem .9rem;border-radius:20px;white-space:nowrap;transition:background .18s,color .18s;flex-shrink:0;}
+nav a:hover{background:var(--teal);color:var(--ink);}
+
+/* WRAPPER */
+.wrapper{max-width:1100px;margin:0 auto;padding:0 2rem 7rem;position:relative;z-index:1;}
+
+/* HERO */
+.hero{position:relative;z-index:1;text-align:center;padding:4rem 2rem 2.5rem;max-width:900px;margin:0 auto;}
+.hero-badge{display:inline-block;font-family:"Caveat",cursive;font-size:1rem;background:var(--teal);
+  border:2.5px solid var(--ink);border-radius:30px;padding:.3rem 1.4rem;margin-bottom:1.2rem;
+  transform:rotate(-1deg);box-shadow:3px 3px 0 var(--ink);}
+.hero h1{font-family:"Caveat",cursive;font-size:clamp(2.2rem,6vw,4rem);font-weight:700;line-height:1.1;margin-bottom:.6rem;}
+.hero h1 em{font-style:normal;background:var(--blue);padding:0 12px;border-radius:8px;display:inline-block;transform:rotate(-1deg);}
+.hero p{font-size:1.05rem;color:var(--ink2);max-width:600px;margin:0 auto 1.5rem;}
+
+/* BACK LINK */
+.back-link{display:inline-flex;align-items:center;gap:.5rem;font-family:"Caveat",cursive;font-size:1rem;font-weight:600;
+  color:var(--ink);text-decoration:none;background:var(--yellow);border:2px solid var(--ink);
+  border-radius:20px;padding:.3rem 1.1rem;box-shadow:3px 3px 0 var(--ink);margin-bottom:1rem;transition:transform .15s;}
+.back-link:hover{transform:translate(-2px,-2px);}
+
+/* CHAPTER SECTION */
+.ch-section{margin-bottom:5rem;scroll-margin-top:70px;}
+.ch-header{display:flex;align-items:flex-end;gap:1rem;margin-bottom:1.8rem;padding-bottom:.8rem;border-bottom:3px solid var(--ink);}
+.ch-num{font-family:"Caveat",cursive;font-size:3.5rem;font-weight:700;color:var(--border);line-height:1;flex-shrink:0;}
+.ch-title{font-family:"Caveat",cursive;font-size:2.2rem;font-weight:700;line-height:1.1;}
+.ch-sub{font-family:"Patrick Hand",cursive;font-size:.93rem;color:var(--ink2);margin-top:.15rem;}
+
+/* NOTEBOOK CELL */
+.cell{margin-bottom:2rem;background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:6px 6px 0 var(--ink);overflow:hidden;}
+.cell-label{font-family:"Caveat",cursive;font-size:.9rem;font-weight:700;letter-spacing:.05em;
+  padding:.4rem 1rem;border-bottom:2px dashed var(--border);display:flex;align-items:center;gap:.5rem;}
+.cell-label.code-cell{background:var(--code-bg);color:#89B4FA;}
+.cell-label.md-cell{background:var(--yellow-d);color:var(--ink);}
+
+/* CODE BLOCK */
+.code{background:var(--code-bg);padding:1.4rem 1.6rem;font-family:"Fira Code","Courier New",monospace;
+  font-size:.82rem;line-height:1.85;color:var(--code-text);overflow-x:auto;white-space:pre;}
+.kw{color:var(--code-kw);}        /* keywords: from, import, def, class, if, while, for, return, True, False */
+.fn{color:var(--code-fn);}        /* function calls */
+.st{color:var(--code-st);}        /* strings */
+.cm{color:var(--code-cm);font-style:italic;}  /* comments */
+.num{color:var(--code-num);}      /* numbers */
+.dec{color:#F38BA8;}              /* decorator */
+.op{color:#89DCEB;}               /* operators/special */
+.cls{color:#FAB387;}              /* class names */
+
+/* EXPLANATION PANEL */
+.explain{padding:1.4rem 1.6rem;}
+.explain h4{font-family:"Caveat",cursive;font-size:1.3rem;font-weight:700;margin-bottom:.7rem;color:var(--ink);}
+.explain p{margin-bottom:.7rem;font-size:.97rem;line-height:1.65;}
+.explain ul{padding-left:1.3rem;margin-bottom:.7rem;}
+.explain ul li{margin-bottom:.4rem;font-size:.95rem;}
+
+/* ANNOTATION BOX */
+.anno{background:var(--blue-bg);border-left:4px solid var(--blue-d);border-radius:0 10px 10px 0;
+  padding:.9rem 1.2rem;margin:.8rem 0;font-size:.93rem;}
+.anno.green{background:var(--green-bg);border-color:var(--green-d);}
+.anno.yellow{background:var(--yellow);border-color:var(--yellow-d);}
+.anno.pink{background:var(--pink-bg);border-color:var(--pink-d);}
+.anno.purple{background:#EDE8FF;border-color:var(--purple-d);}
+.anno.teal{background:#DFF9F7;border-color:var(--teal-d);}
+.anno strong{font-weight:700;}
+
+/* INLINE CODE */
+code{background:#EEF0F8;border:1px solid var(--border);border-radius:4px;padding:1px 6px;
+  font-family:"Fira Code",monospace;font-size:.82rem;color:#5A3E9B;}
+
+/* STEP FLOW */
+.step-flow{display:flex;flex-wrap:wrap;gap:.8rem;margin:1rem 0;}
+.step{background:var(--paper);border:2px solid var(--ink);border-radius:10px;padding:.5rem 1rem;
+  font-family:"Caveat",cursive;font-size:1rem;font-weight:600;box-shadow:3px 3px 0 var(--ink);}
+.step-arrow{display:flex;align-items:center;font-size:1.3rem;color:var(--ink2);}
+
+/* DIVIDER */
+.divider{height:3px;background:repeating-linear-gradient(90deg,var(--ink) 0,var(--ink) 8px,transparent 8px,transparent 16px);
+  margin:3rem 0;border-radius:2px;opacity:.15;}
+
+/* TAG PILLS */
+.tags{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0 1rem;}
+.tag{font-family:"Caveat",cursive;font-size:.85rem;font-weight:600;padding:.15rem .7rem;
+  border-radius:20px;border:1.5px solid currentColor;}
+.tag-blue{background:var(--blue);color:var(--blue-d);}
+.tag-green{background:var(--green);color:var(--green-d);}
+.tag-orange{background:var(--orange);color:var(--orange-d);}
+.tag-pink{background:var(--pink);color:var(--pink-d);}
+.tag-purple{background:var(--purple);color:var(--purple-d);}
+.tag-teal{background:var(--teal);color:var(--teal-d);}
+
+/* LINE BREAKDOWN TABLE */
+.line-table{width:100%;border-collapse:collapse;font-size:.88rem;margin:.8rem 0;}
+.line-table th{background:var(--ink);color:#fff;padding:.5rem .8rem;text-align:left;font-family:"Caveat",cursive;font-size:1rem;}
+.line-table td{padding:.5rem .8rem;border-bottom:1px solid var(--border);vertical-align:top;}
+.line-table tr:nth-child(even) td{background:rgba(168,212,245,.12);}
+.line-table td code{background:#EEF0F8;}
+
+/* STICKY NOTE */
+.sticky{background:var(--yellow);border:2px solid var(--yellow-d);border-radius:4px 12px 12px 4px;
+  padding:.9rem 1.2rem;margin:.8rem 0;font-style:italic;position:relative;box-shadow:3px 3px 0 rgba(0,0,0,.1);}
+.sticky::before{content:"📌";position:absolute;top:-10px;left:10px;font-size:1.2rem;}
+
+@media(max-width:700px){.ch-title{font-size:1.6rem;} .code{font-size:.73rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">💻 <span>Coding Lab</span></div>
+  <a href="#ch1-api">CH1: API Calls</a>
+  <a href="#ch1-embed">CH1: Embeddings</a>
+  <a href="#ch2-rag">CH2: RAG</a>
+  <a href="#ch3-prompt">CH3: Prompting</a>
+  <a href="#ch4-tools">CH4: Tools</a>
+  <a href="#ch4-react">CH4: ReAct</a>
+  <a href="#ch4-struct">CH4: Pydantic</a>
+  <a href="#ch4-chain">CH4: Chains</a>
+  <a href="#ch4-semrag">CH4: Semantic RAG</a>
+  <a href="#ch4-ragagent">CH4: RAG Agent</a>
+  <a href="#ch4-memory">CH4: Memory</a>
+</nav>
+
+<div class="hero">
+  <a href="ai_masterclass_visual_guide.html" class="back-link">← Back to Visual Guide</a>
+  <div class="hero-badge">📂 AI_Fundamentals_Data_Domain — Full Codebase</div>
+  <h1>🧑‍💻 <em>Coding Lab</em></h1>
+  <p>Every notebook. Every function. Every line — explained in full detail so you know exactly what the code is doing and why.</p>
+  <div class="tags" style="justify-content:center;">
+    <span class="tag tag-blue">LangChain</span>
+    <span class="tag tag-green">OpenAI SDK</span>
+    <span class="tag tag-orange">ChromaDB</span>
+    <span class="tag tag-pink">Pydantic</span>
+    <span class="tag tag-purple">ReAct Agents</span>
+    <span class="tag tag-teal">RAG Pipeline</span>
+  </div>
+</div>
+
+<div class="wrapper">
+
+<!-- ════════════════════════════════════════════════════
+     CH-1 — API CALLS
+     ════════════════════════════════════════════════════ -->
+<div id="ch1-api" class="ch-section">
+  <div class="ch-header">
+    <div class="ch-num">1A</div>
+    <div>
+      <div class="ch-title">🔌 LLM API Calls</div>
+      <div class="ch-sub">CH-1_LLMs / 1_API_Calls.ipynb — Two ways to call a language model: OpenAI SDK and Google Gemini SDK</div>
+    </div>
+  </div>
+
+  <!-- CELL: ENV SETUP -->
+  <div class="cell">
+    <div class="cell-label code-cell">⚙️ Cell 1 — Environment Setup</div>
+    <div class="code"><span class="kw">from</span> dotenv <span class="kw">import</span> <span class="fn">load_dotenv</span>
+<span class="fn">load_dotenv</span>()
+<span class="kw">import</span> os
+
+<span class="kw">if</span> os.environ.<span class="fn">get</span>(<span class="st">"OPENAI_API_KEY"</span>):
+    <span class="fn">print</span>(<span class="st">"OPENAI_API_KEY is set."</span>)
+<span class="kw">if</span> os.environ.<span class="fn">get</span>(<span class="st">"GEMINI_API_KEY"</span>):
+    <span class="fn">print</span>(<span class="st">"GEMINI_API_KEY is set."</span>)</div>
+    <div class="explain">
+      <h4>What this does</h4>
+      <p>This is a safety-first setup pattern every production project uses. Here's what each line does:</p>
+      <table class="line-table">
+        <tr><th>Line</th><th>Explanation</th></tr>
+        <tr><td><code>from dotenv import load_dotenv</code></td><td>Imports a function from the <strong>python-dotenv</strong> library which reads a <code>.env</code> file in your project folder</td></tr>
+        <tr><td><code>load_dotenv()</code></td><td>Reads your <code>.env</code> file and loads all key-value pairs (like <code>OPENAI_API_KEY=sk-...</code>) into Python's <code>os.environ</code> dictionary. This way secrets never appear in your code</td></tr>
+        <tr><td><code>import os</code></td><td>Imports Python's built-in OS module that lets you interact with environment variables</td></tr>
+        <tr><td><code>os.environ.get("OPENAI_API_KEY")</code></td><td>Safely reads the environment variable. Returns <code>None</code> (not an error) if missing — much safer than <code>os.environ["KEY"]</code> which crashes if missing</td></tr>
+      </table>
+      <div class="anno green">✅ <strong>Why .env files?</strong> If you hardcode <code>api_key = "sk-abc123..."</code> in your script and accidentally push it to GitHub, bots will find it within minutes and steal your API key. The <code>.env</code> file is listed in <code>.gitignore</code> so it never gets committed.</div>
+    </div>
+  </div>
+
+  <!-- CELL: OPENAI SDK -->
+  <div class="cell">
+    <div class="cell-label md-cell">📝 OpenAI SDK</div>
+    <div class="cell-label code-cell">⚙️ Cell 2 — OpenAI API Call</div>
+    <div class="code"><span class="kw">from</span> openai <span class="kw">import</span> <span class="cls">OpenAI</span>
+
+client = <span class="cls">OpenAI</span>()
+
+response = client.responses.<span class="fn">create</span>(
+    model=<span class="st">"gpt-5-mini"</span>,
+    input=<span class="st">"Tell me a fun fact about Data Domain"</span>
+)
+
+<span class="fn">print</span>(response.output_text)</div>
+    <div class="explain">
+      <h4>Line-by-line breakdown</h4>
+      <table class="line-table">
+        <tr><th>Line</th><th>Explanation</th></tr>
+        <tr><td><code>from openai import OpenAI</code></td><td>Imports OpenAI's official Python client library. Install with <code>pip install openai</code></td></tr>
+        <tr><td><code>client = OpenAI()</code></td><td>Creates a client instance. It <em>automatically</em> reads <code>OPENAI_API_KEY</code> from environment variables — you never pass the key manually in code</td></tr>
+        <tr><td><code>client.responses.create(...)</code></td><td>Calls the <strong>Responses API</strong> (OpenAI's modern endpoint). This is the main function that sends your prompt to the model and waits for a response</td></tr>
+        <tr><td><code>model="gpt-5-mini"</code></td><td>Specifies which model to use. Different models = different quality, speed, and cost tradeoffs</td></tr>
+        <tr><td><code>input="Tell me..."</code></td><td>The prompt (user message) sent to the model. This is what the LLM will respond to</td></tr>
+        <tr><td><code>response.output_text</code></td><td>The response object has many fields. <code>output_text</code> is the shortcut to get the plain text of the model's answer</td></tr>
+      </table>
+      <div class="anno">💡 <strong>What the response object looks like:</strong> It contains <code>id</code>, <code>model</code>, <code>usage</code> (token counts), and <code>output</code> (list of content blocks). <code>response.output_text</code> extracts just the text for you.</div>
+    </div>
+  </div>
+
+  <!-- CELL: GEMINI SDK -->
+  <div class="cell">
+    <div class="cell-label md-cell">📝 Gemini SDK</div>
+    <div class="cell-label code-cell">⚙️ Cell 3 — Google Gemini API Call</div>
+    <div class="code"><span class="kw">from</span> google <span class="kw">import</span> genai
+
+<span class="cm"># The client gets the API key from the environment variable `GEMINI_API_KEY`.</span>
+client = genai.<span class="cls">Client</span>()
+
+response = client.models.<span class="fn">generate_content</span>(
+    model=<span class="st">"gemini-2.5-flash"</span>,
+    contents=<span class="st">"Tell me a fun fact about Data Domain"</span>
+)
+<span class="fn">print</span>(response.text)</div>
+    <div class="explain">
+      <h4>Line-by-line breakdown</h4>
+      <table class="line-table">
+        <tr><th>Line</th><th>Explanation</th></tr>
+        <tr><td><code>from google import genai</code></td><td>Imports Google's <strong>google-genai</strong> Python library. Install with <code>pip install google-genai</code></td></tr>
+        <tr><td><code>client = genai.Client()</code></td><td>Creates a Gemini client. Auto-reads <code>GEMINI_API_KEY</code> from environment — same security pattern as OpenAI</td></tr>
+        <tr><td><code>client.models.generate_content(...)</code></td><td>The Gemini equivalent of OpenAI's <code>responses.create</code>. Sends prompt and gets response</td></tr>
+        <tr><td><code>model="gemini-2.5-flash"</code></td><td>Gemini Flash is Google's fast, efficient model. "Flash" = cheaper/faster, "Pro" = smarter/more expensive</td></tr>
+        <tr><td><code>contents="..."</code></td><td>Gemini uses <code>contents</code> (not <code>input</code>). Both are just the prompt text</td></tr>
+        <tr><td><code>response.text</code></td><td>Extracts the text from Gemini's response. Gemini's API structure differs from OpenAI but the concept is identical</td></tr>
+      </table>
+      <div class="anno yellow">⚠️ <strong>API difference:</strong> OpenAI uses <code>response.output_text</code>, Gemini uses <code>response.text</code>. This is why wrapper libraries like LangChain exist — they give you one unified interface regardless of which model you use.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     CH-1 — EMBEDDINGS
+     ════════════════════════════════════════════════════ -->
+<div id="ch1-embed" class="ch-section">
+  <div class="ch-header">
+    <div class="ch-num">1B</div>
+    <div>
+      <div class="ch-title">🧭 Text Embeddings</div>
+      <div class="ch-sub">CH-1_LLMs / 2_Embeddings.ipynb — Converting text into 1536-dimensional numerical vectors</div>
+    </div>
+  </div>
+
+  <div class="cell">
+    <div class="cell-label code-cell">⚙️ Cell 1 — Create an Embedding Vector</div>
+    <div class="code"><span class="kw">from</span> openai <span class="kw">import</span> <span class="cls">OpenAI</span>
+client = <span class="cls">OpenAI</span>()
+
+response = client.embeddings.<span class="fn">create</span>(
+    input=<span class="st">"I am a test string."</span>,
+    model=<span class="st">"text-embedding-3-small"</span>
+)
+
+vector = response.data[<span class="num">0</span>].embedding
+<span class="fn">len</span>(vector)  <span class="cm"># Output: 1536</span></div>
+    <div class="explain">
+      <h4>What embeddings actually are</h4>
+      <p>An embedding takes a piece of text and converts it into a list of <strong>1536 floating-point numbers</strong>. Think of each number as a coordinate in a 1536-dimensional "meaning space". Similar sentences end up near each other; different sentences are far apart.</p>
+      <table class="line-table">
+        <tr><th>Line</th><th>Explanation</th></tr>
+        <tr><td><code>client.embeddings.create(...)</code></td><td>Calls OpenAI's embedding endpoint — completely separate from the chat/completion endpoint</td></tr>
+        <tr><td><code>input="I am a test string."</code></td><td>The text to embed. Can be a single string or a list of strings for batch embedding</td></tr>
+        <tr><td><code>model="text-embedding-3-small"</code></td><td>OpenAI's embedding model. "small" = 1536 dimensions, faster/cheaper. "large" = 3072 dimensions, more precise</td></tr>
+        <tr><td><code>response.data[0].embedding</code></td><td>The response can embed multiple texts at once, so <code>data</code> is a list. <code>[0]</code> gets the first result, <code>.embedding</code> gets the actual vector list</td></tr>
+        <tr><td><code>len(vector)</code> → <code>1536</code></td><td>Confirms the vector has 1536 dimensions. Every string gets exactly 1536 numbers regardless of its length</td></tr>
+      </table>
+      <div class="anno teal">🧭 <strong>Why 1536 numbers?</strong> Each dimension captures some latent feature of meaning (like "is this about finance?", "is this formal?", etc.). No single dimension has a human-readable meaning — they work together as a coordinate in meaning-space. "cat" and "kitten" will have very similar vectors; "cat" and "spaceship" will be very different.</div>
+    </div>
+  </div>
+
+  <div class="cell">
+    <div class="cell-label code-cell">⚙️ Cell 2 — Viewing the Raw Vector</div>
+    <div class="code">vector  <span class="cm"># Prints: [0.00679779052734375, -0.019805908203125, -0.0287933349609375, ...]</span>
+        <span class="cm"># 1536 numbers between roughly -0.12 and +0.12</span></div>
+    <div class="explain">
+      <h4>What those numbers mean</h4>
+      <p>The raw output is a Python list of 1536 floats, mostly between -1 and +1. Each number on its own means nothing — but <strong>comparing two vectors</strong> using cosine similarity tells you how semantically similar two texts are. This is the magic behind semantic search.</p>
+      <div class="anno green">🔍 <strong>Cosine Similarity:</strong> If vectors A and B point in nearly the same direction, their cosine similarity is close to 1.0 (very similar). Perpendicular = 0.0 (unrelated). Opposite = -1.0 (antonyms). This number is how your vector database ranks results.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     CH-2 — RAG PIPELINE
+     ════════════════════════════════════════════════════ -->
+<div id="ch2-rag" class="ch-section">
+  <div class="ch-header">
+    <div class="ch-num">02</div>
+    <div>
+      <div class="ch-title">🔍 RAG Pipeline (5 Steps)</div>
+      <div class="ch-sub">CH-2_RAG / 1_RAG.ipynb — Full Retrieval-Augmented Generation: PDF → Chunks → Vectors → Search → Answer</div>
+    </div>
+  </div>
+
+  <div class="step-flow">
+    <div class="step">📄 STEP 0: Load PDF</div><div class="step-arrow">→</div>
+    <div class="step">✂️ STEP 1: Chunk</div><div class="step-arrow">→</div>
+    <div class="step">🧭 STEP 2: Embed</div><div class="step-arrow">→</div>
+    <div class="step">🗄️ STEP 3: Store in DB</div><div class="step-arrow">→</div>
+    <div class="step">🔍 STEP 4: Retrieve</div><div class="step-arrow">→</div>
+    <div class="step">🤖 STEP 5: Answer</div>
+  </div>
+
+  <!-- STEP 0: LOAD -->
+  <div class="cell">
+    <div class="cell-label md-cell">📝 STEP-0 — Load the PDF into text format</div>
+    <div class="cell-label code-cell">⚙️ Cell 1 — Imports & PDF Loading</div>
+    <div class="code"><span class="kw">from</span> langchain_openai <span class="kw">import</span> <span class="cls">ChatOpenAI</span>
+<span class="kw">from</span> langchain_community.document_loaders <span class="kw">import</span> <span class="cls">PyPDFLoader</span>
+<span class="kw">from</span> langchain_text_splitters <span class="kw">import</span> <span class="cls">RecursiveCharacterTextSplitter</span>
+<span class="kw">import</span> os
+<span class="kw">from</span> dotenv <span class="kw">import</span> <span class="fn">load_dotenv</span>
+<span class="fn">load_dotenv</span>()
+<span class="kw">from</span> langchain_openai <span class="kw">import</span> <span class="cls">OpenAIEmbeddings</span>
+
+<span class="cm">## STEP-0 : Load the pdf into text format</span>
+text_data = <span class="cls">PyPDFLoader</span>(<span class="st">"NovaS.pdf"</span>).<span class="fn">load</span>()
+
+<span class="cm"># Changing Metadata of the document</span>
+<span class="kw">for</span> page <span class="kw">in</span> text_data:
+    page.metadata[<span class="st">"source"</span>] = <span class="st">"NovaS.pdf"</span>
+
+text_data</div>
+    <div class="explain">
+      <h4>What's happening here</h4>
+      <table class="line-table">
+        <tr><th>Code</th><th>Explanation</th></tr>
+        <tr><td><code>from langchain_openai import ChatOpenAI</code></td><td>LangChain's wrapper around OpenAI's chat models. Using LangChain means you can swap to Gemini/Claude with a single line change later</td></tr>
+        <tr><td><code>from langchain_community.document_loaders import PyPDFLoader</code></td><td>A LangChain document loader specifically for PDFs. Under the hood it uses <code>pypdf</code> to extract text page by page</td></tr>
+        <tr><td><code>from langchain_text_splitters import RecursiveCharacterTextSplitter</code></td><td>The main chunking tool — splits text into smaller pieces for the vector database</td></tr>
+        <tr><td><code>PyPDFLoader("NovaS.pdf").load()</code></td><td>Loads the PDF and returns a <strong>list of Document objects</strong>, one per page. Each Document has <code>.page_content</code> (the text) and <code>.metadata</code> (dict with page number, source, etc.)</td></tr>
+        <tr><td><code>page.metadata["source"] = "NovaS.pdf"</code></td><td>Sets a custom metadata key. Later when you retrieve chunks, you'll know which PDF they came from — crucial in multi-document RAG systems</td></tr>
+      </table>
+      <div class="anno">📄 <strong>Document object structure:</strong><br><code>Document(page_content="The text of this page...", metadata={"page": 0, "source": "NovaS.pdf"})</code><br>text_data is a list of these, one per page of the PDF.</div>
+    </div>
+  </div>
+
+  <!-- STEP 1: CHUNK -->
+  <div class="cell">
+    <div class="cell-label md-cell">📝 STEP-1 — Creating Chunks of the text data</div>
+    <div class="cell-label code-cell">⚙️ Cell 2 — Recursive Character Text Splitter</div>
+    <div class="code">splitter = <span class="cls">RecursiveCharacterTextSplitter</span>(chunk_size=<span class="num">100</span>, chunk_overlap=<span class="num">20</span>)
+
+chunks = splitter.<span class="fn">split_documents</span>(text_data)
+<span class="fn">len</span>(chunks)  <span class="cm"># Returns total number of chunks created</span></div>
+    <div class="explain">
+      <h4>Understanding the splitter parameters</h4>
+      <table class="line-table">
+        <tr><th>Parameter</th><th>Value</th><th>What it means</th></tr>
+        <tr><td><code>chunk_size=100</code></td><td>100 chars</td><td>Each chunk contains at most 100 characters. In production you'd use 500–2000 for richer context</td></tr>
+        <tr><td><code>chunk_overlap=20</code></td><td>20 chars</td><td>The last 20 characters of chunk N are also the first 20 chars of chunk N+1. This prevents a sentence being split mid-thought and losing context at boundaries</td></tr>
+      </table>
+      <div class="anno yellow">✂️ <strong>Why "Recursive"?</strong> The splitter tries to break at the best boundary: first tries paragraph breaks (<code>\n\n</code>), then single newlines (<code>\n</code>), then spaces (<code> </code>), then individual characters as a last resort. This preserves natural language structure instead of cutting blindly at 100 chars.</div>
+      <p><code>split_documents(text_data)</code> takes the full list of page Documents and returns a new (larger) list of smaller chunk Documents. Each chunk inherits the metadata from its parent page.</p>
+    </div>
+  </div>
+
+  <!-- STEP 2&3: EMBED & STORE -->
+  <div class="cell">
+    <div class="cell-label md-cell">📝 STEP-2&3 — Creating Embeddings and Storing in Vector DB</div>
+    <div class="cell-label code-cell">⚙️ Cell 3 — ChromaDB Creation</div>
+    <div class="code"><span class="kw">from</span> langchain_community.vectorstores <span class="kw">import</span> <span class="cls">Chroma</span>
+
+embed_model = <span class="cls">OpenAIEmbeddings</span>(model=<span class="st">"text-embedding-3-small"</span>)
+
+chroma_db = Chroma.<span class="fn">from_documents</span>(
+    chunks,
+    embed_model,
+    persist_directory=<span class="st">"./chroma_db"</span>
+)</div>
+    <div class="explain">
+      <h4>Two steps happening in one call</h4>
+      <table class="line-table">
+        <tr><th>Code</th><th>What happens</th></tr>
+        <tr><td><code>from langchain_community.vectorstores import Chroma</code></td><td>Imports LangChain's ChromaDB integration. ChromaDB is an open-source vector database that runs locally (no server needed)</td></tr>
+        <tr><td><code>OpenAIEmbeddings(model="text-embedding-3-small")</code></td><td>Creates an embedding model object that can convert text → 1536-dim vectors. Stores the API key from environment</td></tr>
+        <tr><td><code>Chroma.from_documents(chunks, embed_model, ...)</code></td><td>Does TWO things at once: (1) Calls <code>embed_model</code> to convert every chunk into a vector, (2) Stores all (vector, text, metadata) triples in ChromaDB on disk</td></tr>
+        <tr><td><code>persist_directory="./chroma_db"</code></td><td>Saves the database to a folder called <code>chroma_db</code>. Without this, everything would be lost when Python stops</td></tr>
+      </table>
+      <div class="anno pink">🗄️ <strong>What ChromaDB stores per chunk:</strong> The embedding vector (1536 floats), the text content, and metadata (source, page number). The folder on disk contains a SQLite file + binary index files for fast nearest-neighbor search.</div>
+    </div>
+  </div>
+
+  <!-- STEP 4: RETRIEVE -->
+  <div class="cell">
+    <div class="cell-label md-cell">📝 STEP-4 — Connection & Retrieval</div>
+    <div class="cell-label code-cell">⚙️ Cell 4 — Connect to Existing DB & Search</div>
+    <div class="code">chroma_db_con = <span class="cls">Chroma</span>(
+    persist_directory=<span class="st">"./chroma_db"</span>,
+    embedding_function=embed_model
+)
+
+chroma_db_con.<span class="fn">similarity_search</span>(
+    <span class="st">"By 2019, how many employees were there?"</span>,
+    k=<span class="num">3</span>
+)</div>
+    <div class="explain">
+      <h4>Re-connecting and querying</h4>
+      <table class="line-table">
+        <tr><th>Code</th><th>Explanation</th></tr>
+        <tr><td><code>Chroma(persist_directory=..., embedding_function=...)</code></td><td>Creates a connection to an <em>already-existing</em> ChromaDB. You must provide the embedding function again so it can embed your query before searching</td></tr>
+        <tr><td><code>similarity_search("query text", k=3)</code></td><td>The full process: (1) Embeds "By 2019, how many employees..." into a vector, (2) Computes cosine similarity against all stored vectors, (3) Returns the top-3 most similar Document objects</td></tr>
+        <tr><td><code>k=3</code></td><td>"k" means "top K". Returns exactly 3 chunks. Higher k = more context for LLM but also more tokens (and cost)</td></tr>
+      </table>
+      <div class="anno green">🔍 <strong>What you get back:</strong> A list of Document objects with their text and metadata. These chunks are the "relevant context" that will be passed to the LLM in Step 5.</div>
+    </div>
+  </div>
+
+  <!-- STEP 5: LLM -->
+  <div class="cell">
+    <div class="cell-label md-cell">📝 STEP-5 — LLM Integration and Answer Generation</div>
+    <div class="cell-label code-cell">⚙️ Cell 5 — Full RAG Q&A Loop</div>
+    <div class="code">llm = <span class="cls">ChatOpenAI</span>(model=<span class="st">"gpt-3.5-turbo"</span>, temperature=<span class="num">0</span>)
+
+user_query = <span class="fn">input</span>(<span class="st">"Enter your question: "</span>)
+
+rel_chunks = chroma_db_con.<span class="fn">similarity_search</span>(user_query, k=<span class="num">3</span>)
+
+rel_chunks_content = []
+<span class="kw">for</span> i, chunk <span class="kw">in</span> <span class="fn">enumerate</span>(rel_chunks):
+    rel_chunks_content.<span class="fn">append</span>(chunk.page_content)
+rel_chunks_content = <span class="fn">str</span>(rel_chunks_content)
+
+llm.<span class="fn">invoke</span>(
+    <span class="fn">f</span><span class="st">"{user_query}, Use the following context to answer the question: {rel_chunks_content}"</span>
+)</div>
+    <div class="explain">
+      <h4>The complete RAG flow in one cell</h4>
+      <table class="line-table">
+        <tr><th>Code</th><th>Explanation</th></tr>
+        <tr><td><code>ChatOpenAI(model="gpt-3.5-turbo", temperature=0)</code></td><td>Creates the answer-generation LLM. <code>temperature=0</code> means <em>deterministic</em> — the model always picks the most probable next token. Higher temperature = more creative/random</td></tr>
+        <tr><td><code>input("Enter your question: ")</code></td><td>Gets the user's question from the terminal at runtime</td></tr>
+        <tr><td><code>similarity_search(user_query, k=3)</code></td><td>Embeds the user's question and finds the 3 most relevant chunks in ChromaDB</td></tr>
+        <tr><td><code>chunk.page_content</code></td><td>Extracts just the raw text from each Document object (without metadata)</td></tr>
+        <tr><td><code>str(rel_chunks_content)</code></td><td>Converts the Python list to a string so it can be embedded inside the f-string prompt</td></tr>
+        <tr><td><code>llm.invoke(f"{user_query}...{rel_chunks_content}")</code></td><td>Sends the combined prompt to GPT. The LLM sees both the question AND the relevant context, so it can answer from the document rather than hallucinating</td></tr>
+      </table>
+      <div class="sticky">💡 This is RAG in its purest form: "Here's the user's question. Here are the 3 most relevant passages from our document. Please answer the question using this context." The LLM is told to use the provided context rather than inventing facts.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     CH-3 — PROMPT ENGINEERING
+     ════════════════════════════════════════════════════ -->
+<div id="ch3-prompt" class="ch-section">
+  <div class="ch-header">
+    <div class="ch-num">03</div>
+    <div>
+      <div class="ch-title">🎯 Prompt Engineering</div>
+      <div class="ch-sub">CH-3_Prompt_Engineering — Zero-shot, One-shot, Few-shot, Chain-of-Thought (theory + API calls)</div>
+    </div>
+  </div>
+
+  <div class="cell">
+    <div class="cell-label code-cell">⚙️ Setup — LangChain LLM</div>
+    <div class="code"><span class="kw">from</span> langchain_openai <span class="kw">import</span> <span class="cls">ChatOpenAI</span>
+<span class="kw">from</span> dotenv <span class="kw">import</span> <span class="fn">load_dotenv</span>
+<span class="fn">load_dotenv</span>()
+
+llm = <span class="cls">ChatOpenAI</span>(model=<span class="st">"gpt-3.5-turbo"</span>, temperature=<span class="num">0</span>)</div>
+    <div class="explain">
+      <p><code>ChatOpenAI</code> from LangChain wraps the OpenAI chat model. Now <code>llm.invoke(prompt)</code> sends any prompt and returns an <code>AIMessage</code> object with <code>.content</code> being the answer string.</p>
+    </div>
+  </div>
+
+  <!-- ZERO SHOT -->
+  <div class="cell">
+    <div class="cell-label md-cell">📝 Zero-Shot Prompting</div>
+    <div class="cell-label code-cell">⚙️ Cell — Zero-Shot API Call</div>
+    <div class="code"><span class="cm"># Zero-shot: just the task, NO examples</span>
+llm.<span class="fn">invoke</span>(<span class="st">"Translate the following English sentence to French: 'How are you?'"</span>)</div>
+    <div class="explain">
+      <h4>Zero-Shot: Rely on pre-trained knowledge</h4>
+      <p>You give the LLM a task directly with no demonstrations. The model uses what it learned during training to complete the task. Best for simple, well-known tasks.</p>
+      <div class="anno">📋 <strong>Prompt structure:</strong> <code>[Task instruction] + [Input]</code><br>Example: "Translate: [sentence]"<br><strong>Works well when:</strong> The task is common and the model has seen many examples during training.</div>
+      <div class="anno pink"><strong>Risk:</strong> For ambiguous or complex tasks, the model might misunderstand the output format you want. That's why few-shot exists.</div>
+    </div>
+  </div>
+
+  <!-- ONE SHOT -->
+  <div class="cell">
+    <div class="cell-label md-cell">📝 One-Shot Prompting</div>
+    <div class="cell-label code-cell">⚙️ Cell — One-Shot API Call</div>
+    <div class="code">one_shot_prompt = (
+    <span class="st">"Translate the following English sentence to French.\n"</span>
+    <span class="st">"Example: 'Good morning' -> 'Bonjour'\n"</span>
+    <span class="st">"Now, translate: 'How are you?'"</span>
+)
+llm.<span class="fn">invoke</span>(one_shot_prompt)</div>
+    <div class="explain">
+      <h4>One-Shot: One example to set expectations</h4>
+      <p>By providing one input→output example, you show the model the <em>exact format</em> you expect. The model picks up the pattern and applies it to the new input.</p>
+      <table class="line-table">
+        <tr><th>Part</th><th>Role</th></tr>
+        <tr><td><code>"Translate..."</code></td><td>Task instruction — tells the model what to do</td></tr>
+        <tr><td><code>"Example: 'Good morning' -> 'Bonjour'"</code></td><td>The one demonstration — shows input → output format</td></tr>
+        <tr><td><code>"Now, translate: 'How are you?'"</code></td><td>The actual task to complete</td></tr>
+      </table>
+      <div class="anno green">✅ <strong>Why Python string concatenation?</strong> Adjacent string literals in Python auto-concatenate. <code>("line 1\n" "line 2")</code> is the same as <code>"line 1\nline 2"</code>. This keeps long prompts readable.</div>
+    </div>
+  </div>
+
+  <!-- FEW SHOT -->
+  <div class="cell">
+    <div class="cell-label md-cell">📝 Few-Shot Prompting</div>
+    <div class="cell-label code-cell">⚙️ Cell — Few-Shot API Call</div>
+    <div class="code">few_shot_prompt = (
+    <span class="st">"Translate the following English sentences to French.\n"</span>
+    <span class="st">"Example 1: 'Good morning' -> 'Bonjour'\n"</span>
+    <span class="st">"Example 2: 'Thank you' -> 'Merci'\n"</span>
+    <span class="st">"Now, translate: 'How are you?'"</span>
+)
+llm.<span class="fn">invoke</span>(few_shot_prompt)</div>
+    <div class="explain">
+      <h4>Few-Shot: Multiple examples for complex tasks</h4>
+      <p>Multiple demonstrations help the model identify patterns more reliably. Especially useful when: (1) The task has a specific output format, (2) The model might misinterpret the task, (3) You need consistent tone or structure.</p>
+      <div class="anno yellow">📊 <strong>Trade-off:</strong> More examples = more tokens used = higher cost. But for structured extraction, classification, or formatting tasks, few-shot examples dramatically improve accuracy. Typical sweet spot: 3–10 examples.</div>
+    </div>
+  </div>
+
+  <!-- COT -->
+  <div class="cell">
+    <div class="cell-label md-cell">📝 Chain-of-Thought Prompting</div>
+    <div class="cell-label code-cell">⚙️ Cell — CoT API Call</div>
+    <div class="code">cot_prompt = (
+    <span class="st">"Solve the following math problem step by step.\n"</span>
+    <span class="st">"Question: If you have 10 apples and get 20 more, how many apples do you have?\n"</span>
+    <span class="st">"Example:\n"</span>
+    <span class="st">"Question: If you have 3 apples and get 2 more, how many apples do you have?\n"</span>
+    <span class="st">"Let's think step by step.\n"</span>
+    <span class="st">"Step 1: Start with 3 apples.\n"</span>
+    <span class="st">"Step 2: Get 2 more apples.\n"</span>
+    <span class="st">"Step 3: 3 + 2 = 5.\n"</span>
+    <span class="st">"Answer: 5 apples."</span>
+)
+llm.<span class="fn">invoke</span>(cot_prompt)</div>
+    <div class="explain">
+      <h4>Chain-of-Thought: Force step-by-step reasoning</h4>
+      <p>The magic phrase <strong>"Let's think step by step"</strong> unlocks LLM reasoning abilities. Without this, the model might jump to a wrong answer. With it, the model is forced to reason explicitly before answering.</p>
+      <div class="anno purple">🧠 <strong>Why does CoT work?</strong> When a model generates text token by token, each token is influenced by previous tokens. By forcing the model to write out reasoning steps, those intermediate steps become part of the context — and they anchor the final answer to be logically consistent with the reasoning.</div>
+      <table class="line-table">
+        <tr><th>Pattern</th><th>What it does</th></tr>
+        <tr><td><code>"Let's think step by step."</code></td><td>The key trigger phrase — activates step-by-step reasoning mode</td></tr>
+        <tr><td>Full example with steps</td><td>Shows the model exactly what "step by step" means for your specific task</td></tr>
+        <tr><td>"Answer: 5 apples."</td><td>Shows the expected final format — the model will mirror this</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     CH-4 — TOOL BINDING
+     ════════════════════════════════════════════════════ -->
+<div id="ch4-tools" class="ch-section">
+  <div class="ch-header">
+    <div class="ch-num">4A</div>
+    <div>
+      <div class="ch-title">🔧 Tool Binding</div>
+      <div class="ch-sub">CH-4_Agent / 1_Tool_Binding.ipynb — Wrapping functions as tools so the LLM can call them</div>
+    </div>
+  </div>
+
+  <div class="cell">
+    <div class="cell-label code-cell">⚙️ Cell 1 — The @tool Decorator</div>
+    <div class="code"><span class="kw">from</span> langchain.tools <span class="kw">import</span> tool
+
+<span class="dec">@tool</span>
+<span class="kw">def</span> <span class="fn">tool_duckduckgo_search</span>(query: str) -> str:
+    <span class="st">"""Use this tool when you need to answer questions about current events or general knowledge."""</span>
+
+    <span class="kw">from</span> langchain_community.tools <span class="kw">import</span> <span class="cls">DuckDuckGoSearchRun</span>
+
+    search = <span class="cls">DuckDuckGoSearchRun</span>()
+    response = search.<span class="fn">invoke</span>(query)
+    <span class="kw">return</span> response
+
+tool_duckduckgo_search.<span class="fn">invoke</span>(<span class="st">"What is the capital of France?"</span>)</div>
+    <div class="explain">
+      <h4>The @tool decorator — most important concept in agentic AI</h4>
+      <table class="line-table">
+        <tr><th>Part</th><th>Explanation</th></tr>
+        <tr><td><code>from langchain.tools import tool</code></td><td>Imports the <code>@tool</code> decorator — LangChain's way to convert any Python function into an LLM-callable tool</td></tr>
+        <tr><td><code>@tool</code></td><td>This decorator wraps <code>tool_duckduckgo_search</code> so it has metadata the LLM can read. It registers the function name, parameters, and docstring</td></tr>
+        <tr><td><code>def tool_duckduckgo_search(query: str) -> str:</code></td><td>Standard Python function with <strong>type hints</strong>. The type hints are required — they tell the LLM what types to pass</td></tr>
+        <tr><td>The docstring <code>"""Use this tool when..."""</code></td><td>🚨 <strong>CRITICAL.</strong> This is what the LLM reads to decide WHEN to use the tool. Write it like instructions to the AI. Clear docstrings = better tool selection</td></tr>
+        <tr><td><code>DuckDuckGoSearchRun()</code></td><td>A pre-built LangChain tool that queries DuckDuckGo search engine. No API key needed</td></tr>
+        <tr><td><code>search.invoke(query)</code></td><td>Runs the actual web search and returns results as a string</td></tr>
+        <tr><td><code>tool_duckduckgo_search.invoke(...)</code></td><td>After decoration, you can call the tool directly to test it. Returns a string of search results</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="cell">
+    <div class="cell-label code-cell">⚙️ Cell 2 — Wikipedia Tool</div>
+    <div class="code"><span class="dec">@tool</span>
+<span class="kw">def</span> <span class="fn">tool_wikipedia_search</span>(query: str) -> str:
+    <span class="st">"""Use this tool when you need to answer questions about persons, places, etc."""</span>
+
+    <span class="kw">from</span> langchain_community.tools <span class="kw">import</span> <span class="cls">WikipediaQueryRun</span>
+    <span class="kw">from</span> langchain_community.utilities <span class="kw">import</span> <span class="cls">WikipediaAPIWrapper</span>
+
+    wikipedia = <span class="cls">WikipediaQueryRun</span>(api_wrapper=<span class="cls">WikipediaAPIWrapper</span>())
+    response = wikipedia.<span class="fn">invoke</span>(query)
+    <span class="kw">return</span> response
+
+tool_wikipedia_search.<span class="fn">invoke</span>(<span class="st">"Sam Altman"</span>)</div>
+    <div class="explain">
+      <h4>Wikipedia tool breakdown</h4>
+      <table class="line-table">
+        <tr><th>Code</th><th>Explanation</th></tr>
+        <tr><td><code>WikipediaAPIWrapper()</code></td><td>Configures the Wikipedia API connection. Can set <code>top_k_results</code> and <code>doc_content_chars_max</code> to control how much text is retrieved</td></tr>
+        <tr><td><code>WikipediaQueryRun(api_wrapper=...)</code></td><td>Creates the actual runnable tool using the wrapper. The wrapper handles rate limiting, API calls, and text extraction</td></tr>
+        <tr><td><code>wikipedia.invoke(query)</code></td><td>Searches Wikipedia for the query and returns a summary string. For "Sam Altman" it would return his Wikipedia biography summary</td></tr>
+      </table>
+      <div class="anno teal">🔄 <strong>The Adapter Pattern:</strong> LangChain uses an <code>APIWrapper</code> class to handle raw API calls, then a <code>QueryRun</code> class to make it LangChain-compatible. This two-class pattern is common throughout LangChain's community integrations.</div>
+    </div>
+  </div>
+
+  <div class="cell">
+    <div class="cell-label code-cell">⚙️ Cell 3 — ArXiv Scientific Papers Tool</div>
+    <div class="code"><span class="dec">@tool</span>
+<span class="kw">def</span> <span class="fn">tool_arxiv_search</span>(query: str) -> str:
+    <span class="st">"""Use this tool when you need to answer questions about scientific papers or research topics."""</span>
+
+    <span class="kw">from</span> langchain_community.tools <span class="kw">import</span> <span class="cls">ArxivQueryRun</span>
+    <span class="kw">from</span> langchain_community.utilities <span class="kw">import</span> <span class="cls">ArxivAPIWrapper</span>
+
+    <span class="cm"># 1. Initialize the arXiv API wrapper</span>
+    arxiv_wrapper = <span class="cls">ArxivAPIWrapper</span>(
+        top_k_results=<span class="num">3</span>,        <span class="cm"># Number of papers to retrieve</span>
+        doc_content_chars_max=<span class="num">2000</span>   <span class="cm"># Max characters per document</span>
+    )
+
+    <span class="cm"># 2. Create the arXiv tool</span>
+    arxiv_tool = <span class="cls">ArxivQueryRun</span>(api_wrapper=arxiv_wrapper)
+
+    <span class="cm"># 3. Use the tool directly</span>
+    result = arxiv_tool.<span class="fn">run</span>(query)
+    <span class="fn">print</span>(result)</div>
+    <div class="explain">
+      <h4>ArXiv paper search breakdown</h4>
+      <table class="line-table">
+        <tr><th>Parameter</th><th>Explanation</th></tr>
+        <tr><td><code>top_k_results=3</code></td><td>Fetches the top 3 most relevant papers from arXiv for the query</td></tr>
+        <tr><td><code>doc_content_chars_max=2000</code></td><td>Limits each paper's abstract/content to 2000 characters. Without limits, papers can be very long and waste tokens</td></tr>
+        <tr><td><code>arxiv_tool.run(query)</code></td><td>Note: uses <code>.run()</code> here instead of <code>.invoke()</code>. Both work but <code>.invoke()</code> is the modern LangChain standard. <code>.run()</code> is a legacy alias</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="cell">
+    <div class="cell-label code-cell">⚙️ Cell 4 — Custom Personal Info Tool</div>
+    <div class="code"><span class="dec">@tool</span>
+<span class="kw">def</span> <span class="fn">tool_personal_info</span>(name: str) -> str:
+    <span class="st">"""Use this tool when you need to answer questions about personal information.
+    Args:
+        name (str): The name of the person to look up.
+    Returns:
+        str: A string containing the person's age and occupation, or a message if not found.
+    """</span>
+
+    infos = [{
+        <span class="st">"name"</span>: <span class="st">"John Doe"</span>,
+        <span class="st">"age"</span>: <span class="num">30</span>,
+        <span class="st">"occupation"</span>: <span class="st">"Software Engineer"</span>
+    }, {
+        <span class="st">"name"</span>: <span class="st">"Jane Smith"</span>,
+        <span class="st">"age"</span>: <span class="num">25</span>,
+        <span class="st">"occupation"</span>: <span class="st">"Data Scientist"</span>
+    }]
+
+    <span class="kw">for</span> info <span class="kw">in</span> infos:
+        <span class="kw">if</span> info[<span class="st">"name"</span>].<span class="fn">lower</span>() == name.<span class="fn">lower</span>():
+            <span class="kw">return</span> <span class="fn">f</span><span class="st">"{info['name']} is {info['age']} years old and works as a {info['occupation']}."</span>
+    <span class="kw">return</span> <span class="st">"Information not found."</span>
+
+tool_personal_info.<span class="fn">invoke</span>(<span class="st">"John Doe"</span>)  <span class="cm"># → "John Doe is 30 years old and works as a Software Engineer."</span></div>
+    <div class="explain">
+      <h4>Building a custom data lookup tool</h4>
+      <p>This demonstrates how to wrap ANY Python logic as a tool. In production this would query a real database, CRM, or API — but the pattern is identical.</p>
+      <table class="line-table">
+        <tr><th>Code</th><th>Explanation</th></tr>
+        <tr><td>The <code>Args</code> / <code>Returns</code> docstring</td><td>The extended docstring format gives the LLM more detail about parameters. It knows <code>name</code> is a string person name, helping it pass correct values</td></tr>
+        <tr><td><code>infos = [{"name": ..., "age": ..., ...}]</code></td><td>Simulated database — a hardcoded list of person records. In real projects this would be a database query</td></tr>
+        <tr><td><code>info["name"].lower() == name.lower()</code></td><td>Case-insensitive comparison: "john doe" matches "John Doe". Robust to LLM capitalisation variations</td></tr>
+        <tr><td><code>return "Information not found."</code></td><td>Graceful fallback when person isn't in the dataset. The LLM will see this string as the tool result and can explain it to the user</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="cell">
+    <div class="cell-label code-cell">⚙️ Cell 5 — Bind All Tools to LLM</div>
+    <div class="code">toolkit = [
+    tool_duckduckgo_search,
+    tool_wikipedia_search,
+    tool_arxiv_search,
+    tool_personal_info
+]
+
+llm_bind = llm.<span class="fn">bind_tools</span>(toolkit)
+
+llm_bind.<span class="fn">invoke</span>(<span class="st">"What's the age of John Doe? Make tool calls if necessary."</span>)</div>
+    <div class="explain">
+      <h4>Tool binding — giving LLM the power to choose</h4>
+      <table class="line-table">
+        <tr><th>Code</th><th>Explanation</th></tr>
+        <tr><td><code>toolkit = [...]</code></td><td>A Python list of all tool functions (decorated with @tool). Order doesn't matter — the LLM reads all docstrings</td></tr>
+        <tr><td><code>llm.bind_tools(toolkit)</code></td><td>Under the hood: converts each tool into an OpenAI function-calling schema (JSON with name, description, parameters) and sends it in every API request. Returns a new LLM object with tools attached</td></tr>
+        <tr><td><code>llm_bind.invoke("...")</code></td><td>When invoked, the LLM can respond with either: (a) a text answer, OR (b) a <code>tool_calls</code> list specifying which tool to call and with what arguments</td></tr>
+      </table>
+      <div class="anno purple">🤖 <strong>What happens under the hood:</strong> OpenAI's API receives the user message PLUS a list of "functions" (tool schemas). The model selects the best tool based on docstring matching, then returns a <code>tool_calls</code> field in the response instead of text. The caller is responsible for actually executing the tool and returning results. A ReAct agent automates this loop.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     CH-4 — REACT AGENT
+     ════════════════════════════════════════════════════ -->
+<div id="ch4-react" class="ch-section">
+  <div class="ch-header">
+    <div class="ch-num">4B</div>
+    <div>
+      <div class="ch-title">🔄 ReAct Agent</div>
+      <div class="ch-sub">CH-4_Agent / 2_ReAct_Agent.ipynb — The Reason → Act → Observe loop that makes agents autonomous</div>
+    </div>
+  </div>
+
+  <div class="cell">
+    <div class="cell-label code-cell">⚙️ Cell — Create and Invoke a ReAct Agent</div>
+    <div class="code"><span class="kw">from</span> langchain.agents <span class="kw">import</span> <span class="fn">create_agent</span>
+
+<span class="cm"># Build the agent by combining the tool-aware LLM with the toolkit</span>
+my_agent = <span class="fn">create_agent</span>(llm_bind, toolkit)
+
+<span class="cm"># Invoke the agent with a user message</span>
+my_agent.<span class="fn">invoke</span>(
+    {<span class="st">"messages"</span>: [{<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: <span class="st">"What's the age of John Doe? Make tool calls if necessary."</span>}]}
+)</div>
+    <div class="explain">
+      <h4>The ReAct Loop — what happens when you invoke the agent</h4>
+      <p>ReAct = <strong>Re</strong>asoning + <strong>Act</strong>ing. The agent doesn't just call tools once — it loops until it has a final answer:</p>
+      <div class="step-flow">
+        <div class="step">💭 Thought: Which tool do I need?</div><div class="step-arrow">→</div>
+        <div class="step">🔧 Action: Call tool_personal_info("John Doe")</div><div class="step-arrow">→</div>
+        <div class="step">👁️ Observe: "John Doe is 30 years old..."</div><div class="step-arrow">→</div>
+        <div class="step">💬 Final Answer to user</div>
+      </div>
+      <table class="line-table">
+        <tr><th>Code</th><th>Explanation</th></tr>
+        <tr><td><code>create_agent(llm_bind, toolkit)</code></td><td>Creates a LangGraph-based agent that implements the ReAct loop. Takes the tool-bound LLM and the toolkit. Returns an agent you can invoke like any other chain</td></tr>
+        <tr><td><code>{"messages": [{"role": "user", "content": "..."}]}</code></td><td>The agent takes its input as a dict with a <code>messages</code> key. This is OpenAI chat format — <code>role</code> is "user"/"assistant"/"system", <code>content</code> is the text</td></tr>
+        <tr><td>The agent return value</td><td>A dict with <code>messages</code> — a list of ALL messages including: user message, LLM reasoning, tool call requests, tool results, and the final answer</td></tr>
+      </table>
+      <div class="anno teal">🔄 <strong>Multi-step example:</strong> If you ask "Who is Sam Altman and what papers has he published?", the agent will: (1) Call Wikipedia for his bio, (2) Call ArXiv for his papers, (3) Combine both into a final answer. All automatically, no code changes needed.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     CH-4 — STRUCTURED OUTPUT
+     ════════════════════════════════════════════════════ -->
+<div id="ch4-struct" class="ch-section">
+  <div class="ch-header">
+    <div class="ch-num">4C</div>
+    <div>
+      <div class="ch-title">🏗️ Structured Output with Pydantic</div>
+      <div class="ch-sub">CH-4_Agent / 3_Structured_Output.ipynb — Forcing the LLM to return typed, validated data</div>
+    </div>
+  </div>
+
+  <div class="cell">
+    <div class="cell-label code-cell">⚙️ Cell 1 — The Problem (Unstructured Output)</div>
+    <div class="code">response = llm.<span class="fn">invoke</span>(
+    <span class="st">"What is the capital of France? Generate output with: "</span>
+    <span class="st">"'Query: &lt;the query&gt;' 'Answer: &lt;the answer&gt;'"</span>
+)
+response = response.content
+response
+<span class="cm"># → "Query: What is the capital of France? Answer: Paris"</span>
+<span class="cm"># This is just a string — fragile, hard to parse programmatically</span></div>
+    <div class="explain">
+      <h4>Why unstructured output is a problem</h4>
+      <p>When you ask an LLM to format output in a specific way, it sometimes adds extra text, changes the format, or makes mistakes. You can't reliably do <code>response.split("Answer:")[1]</code> because the LLM might write "The answer is:" or include extra sentences. Pydantic fixes this.</p>
+    </div>
+  </div>
+
+  <div class="cell">
+    <div class="cell-label code-cell">⚙️ Cell 2 — Pydantic Schema Definition</div>
+    <div class="code"><span class="kw">from</span> pydantic <span class="kw">import</span> <span class="cls">BaseModel</span>, <span class="cls">Field</span>
+
+<span class="kw">class</span> <span class="cls">llm_schema</span>(<span class="cls">BaseModel</span>):
+    query: str = <span class="cls">Field</span>(description=<span class="st">"The query that was asked to the LLM"</span>)
+    answer: str = <span class="cls">Field</span>(description=<span class="st">"The answer generated by the LLM"</span>)
+    total_tokens: int = <span class="cls">Field</span>(description=<span class="st">"The total number of tokens used in the LLM response"</span>)</div>
+    <div class="explain">
+      <h4>Defining the output schema</h4>
+      <table class="line-table">
+        <tr><th>Code</th><th>Explanation</th></tr>
+        <tr><td><code>from pydantic import BaseModel, Field</code></td><td>Pydantic is Python's most popular data validation library. LangChain uses it heavily for structured output</td></tr>
+        <tr><td><code>class llm_schema(BaseModel):</code></td><td>Creates a data class (like a typed Python dict) that defines what fields the output must have</td></tr>
+        <tr><td><code>query: str</code></td><td>The <code>query</code> field must be a string. Pydantic auto-validates and raises an error if the LLM returns an int or list here</td></tr>
+        <tr><td><code>total_tokens: int</code></td><td>The <code>total_tokens</code> field must be an integer. This shows you can ask the LLM to count/estimate things as structured numbers</td></tr>
+        <tr><td><code>Field(description="...")</code></td><td>The description tells the LLM exactly what to put in this field — it's sent to OpenAI's function-calling API as part of the schema. Clearer descriptions = better LLM compliance</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="cell">
+    <div class="cell-label code-cell">⚙️ Cell 3 — with_structured_output & Invocation</div>
+    <div class="code">llm_structured = llm.<span class="fn">with_structured_output</span>(llm_schema)
+response = llm_structured.<span class="fn">invoke</span>(<span class="st">"What is the capital of France?"</span>)
+response
+<span class="cm"># → llm_schema(query='What is the capital of France?', answer='Paris', total_tokens=42)</span>
+
+response.<span class="fn">model_dump</span>()
+<span class="cm"># → {"query": "What is the capital of France?", "answer": "Paris", "total_tokens": 42}</span></div>
+    <div class="explain">
+      <h4>Structured output in action</h4>
+      <table class="line-table">
+        <tr><th>Code</th><th>Explanation</th></tr>
+        <tr><td><code>llm.with_structured_output(llm_schema)</code></td><td>Creates a new LLM wrapper that sends the Pydantic schema to OpenAI as a function-calling tool. The LLM is forced to return JSON matching that schema. Returns a modified LLM object</td></tr>
+        <tr><td><code>llm_structured.invoke("...")</code></td><td>Calls the LLM and automatically parses the JSON response into an <code>llm_schema</code> Pydantic object. You get back a Python object with typed attributes, not a string</td></tr>
+        <tr><td><code>response.query</code></td><td>Access fields like normal Python attributes: <code>response.query</code>, <code>response.answer</code>, <code>response.total_tokens</code></td></tr>
+        <tr><td><code>response.model_dump()</code></td><td>Converts the Pydantic object to a standard Python dictionary — useful for JSON serialization, database storage, or API responses</td></tr>
+      </table>
+      <div class="anno green">✅ <strong>Real-world use cases for structured output:</strong> (1) Extracting entities from text (name, date, amount as typed fields), (2) Classifying text into categories (must be one of: "positive", "negative", "neutral"), (3) Building APIs where downstream code expects predictable JSON, (4) Form filling from natural language.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     CH-4 — PROMPT TEMPLATES & CHAINS
+     ════════════════════════════════════════════════════ -->
+<div id="ch4-chain" class="ch-section">
+  <div class="ch-header">
+    <div class="ch-num">4D</div>
+    <div>
+      <div class="ch-title">⛓️ Prompt Templates & LCEL Chains</div>
+      <div class="ch-sub">CH-4_Agent / 4_prompt_templates.ipynb — Reusable prompts and the pipe operator | for chaining components</div>
+    </div>
+  </div>
+
+  <div class="cell">
+    <div class="cell-label code-cell">⚙️ Cell 1 — Manual Message Dict vs Template</div>
+    <div class="code"><span class="cm"># OLD WAY: Hardcoded messages dict — not reusable</span>
+messages = [
+    {<span class="st">"role"</span>: <span class="st">"system"</span>, <span class="st">"content"</span>: <span class="st">"You are a genZ poet."</span>},
+    {<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: <span class="st">"Write a poem about the beauty of nature."</span>}
+]
+response = llm.<span class="fn">invoke</span>(messages)
+
+<span class="cm"># NEW WAY: ChatPromptTemplate — reusable with variables</span>
+<span class="kw">from</span> langchain_core.prompts <span class="kw">import</span> <span class="cls">ChatPromptTemplate</span>
+
+my_template = <span class="cls">ChatPromptTemplate</span>.<span class="fn">from_messages</span>(
+    [
+        (<span class="st">"system"</span>, <span class="st">"You are a genZ poet."</span>),
+        (<span class="st">"user"</span>, <span class="st">"Write a poem about the {topic}."</span>)  <span class="cm"># {topic} is a variable</span>
+    ]
+)
+mountains_prompt = my_template.<span class="fn">invoke</span>({<span class="st">"topic"</span>: <span class="st">"beauty of mountains"</span>})</div>
+    <div class="explain">
+      <h4>Why templates beat hardcoded strings</h4>
+      <table class="line-table">
+        <tr><th>Code</th><th>Explanation</th></tr>
+        <tr><td><code>ChatPromptTemplate.from_messages([...])</code></td><td>Creates a reusable template from a list of (role, content) tuples. The content can contain <code>{variable}</code> placeholders</td></tr>
+        <tr><td><code>("system", "You are a genZ poet.")</code></td><td>System message — sets the AI's persona/behavior for the entire conversation</td></tr>
+        <tr><td><code>"Write a poem about the {topic}."</code></td><td>The <code>{topic}</code> placeholder will be filled with whatever value you pass. This is Jinja2-style templating</td></tr>
+        <tr><td><code>my_template.invoke({"topic": "beauty of mountains"})</code></td><td>Renders the template: replaces <code>{topic}</code> with "beauty of mountains". Returns a <code>ChatPromptValue</code> object ready to send to the LLM</td></tr>
+      </table>
+      <div class="anno">💡 <strong>The power of templates:</strong> Write your prompt once, use it with hundreds of different topics. Easy to test, version, and share across your team. Prevents copy-paste errors in long prompt strings.</div>
+    </div>
+  </div>
+
+  <div class="cell">
+    <div class="cell-label md-cell">📝 LCEL Chains — The Pipe Operator</div>
+    <div class="cell-label code-cell">⚙️ Cell 2 — Building a Full Chain</div>
+    <div class="code"><span class="cm"># Step-1: Create a prompt template</span>
+my_template = <span class="cls">ChatPromptTemplate</span>.<span class="fn">from_messages</span>(
+    [
+        (<span class="st">"system"</span>, <span class="st">"You are a genZ poet."</span>),
+        (<span class="st">"user"</span>, <span class="st">"Write a poem about the {topic}."</span>)
+    ]
+)
+
+<span class="cm"># Step-2: Structured output schema</span>
+<span class="kw">class</span> <span class="cls">llm_schema</span>(<span class="cls">BaseModel</span>):
+    query: str = <span class="cls">Field</span>(description=<span class="st">"The query that was asked to the LLM"</span>)
+    answer: str = <span class="cls">Field</span>(description=<span class="st">"The answer generated by the LLM"</span>)
+    total_tokens: int = <span class="cls">Field</span>(description=<span class="st">"The total number of tokens used"</span>)
+
+llm_structured = llm.<span class="fn">with_structured_output</span>(llm_schema)
+
+<span class="cm"># Step-3: Parser (optional with structured output)</span>
+<span class="kw">from</span> langchain_core.output_parsers <span class="kw">import</span> <span class="cls">PydanticOutputParser</span>
+parser = <span class="cls">PydanticOutputParser</span>(pydantic_object=llm_schema)
+
+<span class="cm"># Final Step: Chain everything with the pipe operator |</span>
+my_chain = my_template <span class="op">|</span> llm_structured
+
+my_chain.<span class="fn">invoke</span>({<span class="st">"topic"</span>: <span class="st">"beauty of mountains"</span>})</div>
+    <div class="explain">
+      <h4>LCEL — LangChain Expression Language</h4>
+      <p>The <code>|</code> (pipe) operator creates a <strong>chain</strong>: the output of the left side automatically becomes the input of the right side. This is called LCEL (LangChain Expression Language).</p>
+      <table class="line-table">
+        <tr><th>Code</th><th>Explanation</th></tr>
+        <tr><td><code>my_chain = my_template | llm_structured</code></td><td>Creates a pipeline: template renders → output goes into LLM → LLM output is parsed into Pydantic schema. All with one <code>|</code></td></tr>
+        <tr><td><code>my_chain.invoke({"topic": "beauty of mountains"})</code></td><td>Runs the full pipeline: fills template → sends to LLM → gets structured object back. You never manually pass data between steps</td></tr>
+        <tr><td><code>PydanticOutputParser</code></td><td>An alternative parser for when you're not using <code>with_structured_output</code>. It parses LLM text output into a Pydantic object using regex/JSON parsing</td></tr>
+      </table>
+      <div class="anno purple">⛓️ <strong>You can chain more steps:</strong> <code>template | llm | parser | another_function</code> — as many components as you want. Each component just needs to accept the output format of the previous one. This is how complex AI pipelines are built in production.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     CH-4 — SEMANTIC RAG
+     ════════════════════════════════════════════════════ -->
+<div id="ch4-semrag" class="ch-section">
+  <div class="ch-header">
+    <div class="ch-num">4E</div>
+    <div>
+      <div class="ch-title">🧩 Semantic RAG (Smart Chunking)</div>
+      <div class="ch-sub">CH-4_Agent / 5.1_RAG_Semantic.ipynb — Split by meaning, not character count, for better retrieval</div>
+    </div>
+  </div>
+
+  <div class="cell">
+    <div class="cell-label code-cell">⚙️ Cell 1 — Load & Join PDF Pages</div>
+    <div class="code">docs = <span class="cls">PyPDFLoader</span>(<span class="st">"../CH-2_RAG/NovaS.pdf"</span>).<span class="fn">load</span>()
+
+<span class="cm"># Join all pages into one large string (SemanticChunker needs raw text)</span>
+full_text = <span class="st">"\n"</span>.<span class="fn">join</span>([p.page_content <span class="kw">for</span> p <span class="kw">in</span> docs])
+full_text</div>
+    <div class="explain">
+      <p>Regular RAG works on Document objects (one per page). SemanticChunker needs the entire document as a single string, so we join all pages with newlines. The list comprehension <code>[p.page_content for p in docs]</code> extracts text from each page Document, then <code>"\n".join(...)</code> merges them into one big string.</p>
+    </div>
+  </div>
+
+  <div class="cell">
+    <div class="cell-label code-cell">⚙️ Cell 2 — Semantic Chunker</div>
+    <div class="code"><span class="kw">from</span> langchain_experimental.text_splitter <span class="kw">import</span> <span class="cls">SemanticChunker</span>
+
+chunker = <span class="cls">SemanticChunker</span>(
+    <span class="cls">OpenAIEmbeddings</span>(model=<span class="st">"text-embedding-3-small"</span>),
+    breakpoint_threshold_type=<span class="st">"percentile"</span>,
+    breakpoint_threshold_amount=<span class="num">60</span>
+)
+
+semantic_chunks = chunker.<span class="fn">create_documents</span>([full_text])
+semantic_chunks</div>
+    <div class="explain">
+      <h4>How SemanticChunker works — sentence by sentence</h4>
+      <table class="line-table">
+        <tr><th>Parameter</th><th>Explanation</th></tr>
+        <tr><td><code>OpenAIEmbeddings(model="text-embedding-3-small")</code></td><td>The embedding model used to compare sentences. Each sentence gets embedded and compared to its neighbors</td></tr>
+        <tr><td><code>breakpoint_threshold_type="percentile"</code></td><td>Uses the statistical percentile of cosine distances as the threshold. Alternative: <code>"standard_deviation"</code>, <code>"interquartile"</code></td></tr>
+        <tr><td><code>breakpoint_threshold_amount=60</code></td><td>Creates a new chunk when the distance between consecutive sentences is in the 60th percentile or above (i.e., when sentences become notably less similar). Lower % = more chunks (splits more aggressively)</td></tr>
+      </table>
+      <div class="anno green">🧩 <strong>The algorithm step-by-step:</strong><br>
+        1. Split text into sentences<br>
+        2. Embed every sentence<br>
+        3. For each pair of adjacent sentences, compute cosine distance (how different are they?)<br>
+        4. Find the 60th percentile distance threshold<br>
+        5. Wherever distance exceeds threshold = topic change → start new chunk<br>
+        6. Result: chunks that contain complete ideas, not arbitrary 500-char slices
+      </div>
+      <p><code>chunker.create_documents([full_text])</code> takes the text as a list (can process multiple texts) and returns a list of Document objects — same format as regular chunking.</p>
+    </div>
+  </div>
+
+  <div class="cell">
+    <div class="cell-label code-cell">⚙️ Cell 3–5 — Rest of Pipeline (Same as Regular RAG)</div>
+    <div class="code"><span class="cm"># Store in ChromaDB (DIFFERENT folder: chroma_db_semantic)</span>
+chroma_db = Chroma.<span class="fn">from_documents</span>(
+    semantic_chunks,
+    embed_model,
+    persist_directory=<span class="st">"./chroma_db_semantic"</span>
+)
+
+<span class="cm"># Connect and search</span>
+chroma_db_con = <span class="cls">Chroma</span>(persist_directory=<span class="st">"./chroma_db_semantic"</span>, embedding_function=embed_model)
+chroma_db_con.<span class="fn">similarity_search</span>(<span class="st">"By 2019, how many employees were there?"</span>, k=<span class="num">3</span>)
+
+<span class="cm"># Answer generation (identical to regular RAG)</span>
+llm = <span class="cls">ChatOpenAI</span>(model=<span class="st">"gpt-3.5-turbo"</span>, temperature=<span class="num">0</span>)
+user_query = <span class="fn">input</span>(<span class="st">"Enter your question: "</span>)
+rel_chunks = chroma_db_con.<span class="fn">similarity_search</span>(user_query, k=<span class="num">3</span>)
+rel_chunks_content = <span class="fn">str</span>([chunk.page_content <span class="kw">for</span> chunk <span class="kw">in</span> rel_chunks])
+llm.<span class="fn">invoke</span>(<span class="fn">f</span><span class="st">"{user_query}, Use the following context to answer the question: {rel_chunks_content}"</span>)</div>
+    <div class="explain">
+      <p>Everything after chunking is <em>identical</em> to regular RAG. The only differences are: (1) <code>chroma_db_semantic</code> folder name to keep databases separate, (2) The chunk quality is better because they contain complete ideas. The retrieval and LLM call are the same API calls.</p>
+      <div class="anno yellow">⚠️ <strong>Cost note:</strong> SemanticChunker calls the embedding API once for every sentence in your document during chunking — this costs money. Regular chunking is free (no API calls during chunking). For large documents, semantic chunking can be significantly more expensive to index.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     CH-4 — RAG AGENT
+     ════════════════════════════════════════════════════ -->
+<div id="ch4-ragagent" class="ch-section">
+  <div class="ch-header">
+    <div class="ch-num">4F</div>
+    <div>
+      <div class="ch-title">🤖 ReAct RAG Agent</div>
+      <div class="ch-sub">CH-4_Agent / 5.2_RAG_Agent.ipynb — RAG becomes a tool, giving the agent access to private documents</div>
+    </div>
+  </div>
+
+  <div class="cell">
+    <div class="cell-label code-cell">⚙️ The Key Addition — tool_rag Function</div>
+    <div class="code"><span class="dec">@tool</span>
+<span class="kw">def</span> <span class="fn">tool_rag</span>(query: str) -> str:
+    <span class="st">"""Use this tool when you need to answer questions based on NovaSphere Organization's documentation."""</span>
+
+    <span class="kw">from</span> langchain_community.vectorstores <span class="kw">import</span> <span class="cls">Chroma</span>
+    <span class="kw">from</span> langchain_openai <span class="kw">import</span> <span class="cls">OpenAIEmbeddings</span>
+    embed_model = <span class="cls">OpenAIEmbeddings</span>(model=<span class="st">"text-embedding-3-small"</span>)
+    chroma_db_con = <span class="cls">Chroma</span>(
+        persist_directory=<span class="st">"./chroma_db_semantic"</span>,
+        embedding_function=embed_model
+    )
+
+    <span class="cm"># Retrieve relevant documents from the vector store</span>
+    relevant_docs = chroma_db_con.<span class="fn">similarity_search</span>(query, k=<span class="num">2</span>)
+    relevant_docs_content = <span class="st">"\n"</span>.<span class="fn">join</span>([doc.page_content <span class="kw">for</span> doc <span class="kw">in</span> relevant_docs])
+    <span class="kw">return</span> relevant_docs_content
+
+tool_rag.<span class="fn">invoke</span>(<span class="st">"When was NovaSphere Organization founded?"</span>)</div>
+    <div class="explain">
+      <h4>Wrapping the entire RAG pipeline as a single tool</h4>
+      <p>This is the key insight: the whole retrieval pipeline (embed query → vector search → return text) becomes ONE tool that the agent can choose to call.</p>
+      <table class="line-table">
+        <tr><th>Code</th><th>Explanation</th></tr>
+        <tr><td>The docstring specifies "NovaSphere Organization's documentation"</td><td>The LLM will only call this tool when asked about NovaSphere. For general questions, it will use DuckDuckGo or Wikipedia instead. <strong>The docstring = routing logic</strong></td></tr>
+        <tr><td>Imports inside the function body</td><td>Imports are placed inside the function so they're loaded on-demand. Good practice for optional dependencies</td></tr>
+        <tr><td><code>similarity_search(query, k=2)</code></td><td>Returns only 2 chunks (instead of 3 in regular RAG) — agents have token limits since they accumulate many messages in their context</td></tr>
+        <tr><td><code>"\n".join([doc.page_content for doc in relevant_docs])</code></td><td>Joins the 2 retrieved chunks into one string with newlines. This string is returned to the agent as the "tool result" — it becomes an Observation in the ReAct loop</td></tr>
+      </table>
+
+      <div class="cell" style="margin-top:1rem;">
+        <div class="cell-label code-cell">⚙️ Full Toolkit + Agent with RAG</div>
+        <div class="code">toolkit = [
+    tool_duckduckgo_search,
+    tool_wikipedia_search,
+    tool_arxiv_search,
+    tool_personal_info,
+    tool_rag  <span class="cm"># ← NEW: private document access</span>
+]
+
+llm_bind = llm.<span class="fn">bind_tools</span>(toolkit)
+my_agent = <span class="fn">create_agent</span>(llm_bind, toolkit)
+
+<span class="cm"># Test 1: Uses tool_personal_info</span>
+my_agent.<span class="fn">invoke</span>(
+    {<span class="st">"messages"</span>: [{<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: <span class="st">"What's the age of John Doe?"</span>}]}
+)
+
+<span class="cm"># Test 2: Uses tool_rag (private docs)</span>
+my_agent.<span class="fn">invoke</span>(
+    {<span class="st">"messages"</span>: [{<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: <span class="st">"When was NovaSphere Organization founded?"</span>}]}
+)</div>
+        <div class="explain">
+          <p>The agent now autonomously routes between 5 tools. For "When was NovaSphere founded?" → the agent sees the docstring says "NovaSphere documentation" → calls <code>tool_rag</code> → gets the answer from the PDF. For John Doe → uses <code>tool_personal_info</code>. No hardcoding. The docstrings do all the routing.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     CH-4 — AGENT MEMORY
+     ════════════════════════════════════════════════════ -->
+<div id="ch4-memory" class="ch-section">
+  <div class="ch-header">
+    <div class="ch-num">4G</div>
+    <div>
+      <div class="ch-title">🧠 Agent Memory</div>
+      <div class="ch-sub">CH-4_Agent / 6_Agent_Memory.ipynb — Persistent conversation history so the agent remembers you</div>
+    </div>
+  </div>
+
+  <div class="cell">
+    <div class="cell-label code-cell">⚙️ Cell 1 — The Memory Container</div>
+    <div class="code"><span class="cm"># Simple Python list = RAM-based memory</span>
+agent_memory = []</div>
+    <div class="explain">
+      <h4>Memory = just a Python list</h4>
+      <p>There's no magic here. Memory is literally a Python list that accumulates LangChain message objects. Each time the agent responds, all messages (user, AI, tool calls, tool results) get appended to this list. The list is then included in future prompts so the agent has conversation history.</p>
+      <div class="anno">📦 <strong>Types of memory storage:</strong><br>
+        • <strong>RAM (this code):</strong> Fastest, lost when Python stops. Good for single-session prototypes<br>
+        • <strong>JSON/file:</strong> Survives restarts, easy to inspect. Good for single-user tools<br>
+        • <strong>Database (PostgreSQL/Redis):</strong> Production-grade, supports millions of users with separate conversation histories per user
+      </div>
+    </div>
+  </div>
+
+  <div class="cell">
+    <div class="cell-label code-cell">⚙️ Cell 2 — The Memory-Aware Invoke Function</div>
+    <div class="code"><span class="kw">def</span> <span class="fn">invoke_agent_with_memory</span>(query: str):
+
+    response = my_agent.<span class="fn">invoke</span>(
+        {<span class="st">"messages"</span>: [{
+            <span class="st">"role"</span>: <span class="st">"user"</span>,
+            <span class="st">"content"</span>: <span class="fn">f</span><span class="st">"Answer this query: {query}. You can refer to the previous interactions: {str(agent_memory)}"</span>
+        }]}
+    )
+    agent_memory.<span class="fn">extend</span>(response[<span class="st">'messages'</span>])
+    <span class="kw">return</span> response</div>
+    <div class="explain">
+      <h4>Memory function — explained line by line</h4>
+      <table class="line-table">
+        <tr><th>Line</th><th>Explanation</th></tr>
+        <tr><td><code>f"Answer this query: {query}. You can refer to the previous interactions: {str(agent_memory)}"</code></td><td>Injects the entire conversation history into the prompt. The LLM has no persistent state between calls — you must explicitly include history in every new call. <code>str(agent_memory)</code> converts the list of message objects to a readable string</td></tr>
+        <tr><td><code>agent_memory.extend(response['messages'])</code></td><td>After the agent responds, appends ALL generated messages to memory. <code>extend</code> adds multiple items (unlike <code>append</code> which adds one). The response contains: user message, LLM reasoning, any tool calls, tool results, and final answer</td></tr>
+        <tr><td><code>return response</code></td><td>Returns the full response dict so the caller can print or process it</td></tr>
+      </table>
+      <div class="anno pink">⚠️ <strong>Memory grows with every turn!</strong> After 10 conversations, <code>str(agent_memory)</code> could be thousands of characters. This increases cost and can hit token limits. Production solutions: truncate old messages, summarize history, or use a dedicated memory store like LangGraph's checkpointing.</div>
+    </div>
+  </div>
+
+  <div class="cell">
+    <div class="cell-label code-cell">⚙️ Cell 3 — The Infinite Chat Loop</div>
+    <div class="code"><span class="cm"># Example queries (commented out for testing individually)</span>
+<span class="cm"># invoke_agent_with_memory("When was NovaSphere Organization founded?")</span>
+<span class="cm"># invoke_agent_with_memory("Could you please summarize the previous interactions?")</span>
+<span class="cm"># agent_memory  # inspect memory contents</span>
+
+<span class="cm"># PRODUCTION: Infinite conversation loop</span>
+<span class="kw">while</span> <span class="kw">True</span>:
+    query = <span class="fn">input</span>(<span class="st">"Ask me anything: "</span>)
+    response = <span class="fn">invoke_agent_with_memory</span>(query)
+    <span class="fn">print</span>(response)
+    flag = <span class="fn">input</span>(<span class="st">"Do you want to continue? (yes/no): "</span>)
+    <span class="kw">if</span> flag.<span class="fn">lower</span>() == <span class="st">"no"</span>:
+        <span class="kw">break</span></div>
+    <div class="explain">
+      <h4>Building your own ChatGPT loop</h4>
+      <table class="line-table">
+        <tr><th>Code</th><th>Explanation</th></tr>
+        <tr><td><code>while True:</code></td><td>Infinite loop — keeps the conversation going until the user says "no". This is how every chatbot interface works at its core</td></tr>
+        <tr><td><code>input("Ask me anything: ")</code></td><td>Blocks execution and waits for user to type a question and press Enter</td></tr>
+        <tr><td><code>invoke_agent_with_memory(query)</code></td><td>Runs the full agent with memory — embeds history, calls tools if needed, generates response, saves to memory</td></tr>
+        <tr><td><code>flag.lower() == "no"</code></td><td>Case-insensitive exit check — "NO", "No", "no" all work</td></tr>
+        <tr><td><code>break</code></td><td>Exits the while loop when user is done chatting</td></tr>
+      </table>
+      <div class="sticky">🎉 You now understand the complete AI engineering stack! From raw API calls → embeddings → vector databases → RAG → prompt engineering → tool binding → autonomous ReAct agents → structured output → prompt chains → semantic chunking → RAG as a tool → persistent memory. This is everything needed to build production AI applications.</div>
+    </div>
+  </div>
+
+  <!-- FULL ARCHITECTURE SUMMARY -->
+  <div class="cell">
+    <div class="cell-label md-cell">📝 Complete Architecture — How it all connects</div>
+    <div class="explain">
+      <h4>The full system running together</h4>
+      <p>In <code>6_Agent_Memory.ipynb</code>, every component from every chapter is combined. Here's the complete picture:</p>
+      <div class="step-flow" style="flex-direction:column;align-items:flex-start;">
+        <div class="step" style="width:100%;background:var(--blue-bg);">📄 PDF (NovaS.pdf) → SemanticChunker → ChromaDB <em style="color:var(--ink2);font-size:.85rem;">(one-time setup, persisted to disk)</em></div>
+        <div class="step" style="width:100%;background:var(--green-bg);">🔧 4 Tools: DuckDuckGo + Wikipedia + ArXiv + PersonalInfo + RAG</div>
+        <div class="step" style="width:100%;background:var(--yellow);">🤖 ReAct Agent = LLM + Toolkit → Reason → Act → Observe loop</div>
+        <div class="step" style="width:100%;background:var(--pink-bg);">🧠 Memory = List accumulating ALL messages from ALL turns</div>
+        <div class="step" style="width:100%;background:var(--purple);">💬 while True loop = infinite conversation until user stops</div>
+      </div>
+      <div class="anno teal" style="margin-top:1rem;">
+        <strong>When a user asks "Who founded NovaSphere and what's their current stock price?"</strong><br>
+        The agent will: (1) Call <code>tool_rag</code> for the founder name, (2) Call <code>tool_duckduckgo_search</code> for current stock data, (3) Combine both into a final answer — all automatically, guided only by tool docstrings.
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /wrapper -->
+
+<footer style="text-align:center;padding:3rem 2rem;position:relative;z-index:1;border-top:3px solid var(--border);margin-top:2rem;font-family:'Caveat',cursive;">
+  <div style="font-size:2.2rem;margin-bottom:.6rem;">💻 🔧 🤖</div>
+  AI Fundamentals Coding Lab — Complete Codebase Explained<br>
+  <span style="font-size:.9rem;color:var(--border);">Code → Understand → Build → Ship 🚀</span>
+</footer>
+
+<script>
+// Smooth scroll
+document.querySelectorAll("nav a").forEach(a=>{
+  a.addEventListener("click",e=>{
+    e.preventDefault();
+    const t=document.querySelector(a.getAttribute("href"));
+    if(t) t.scrollIntoView({behavior:"smooth"});
+  });
+});
+// Active highlight
+const secs=document.querySelectorAll(".ch-section[id]");
+const links=document.querySelectorAll("nav a");
+secs.forEach(s=>{
+  new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const id=e.target.id;
+        links.forEach(l=>{
+          const on=l.getAttribute("href")==="#"+id;
+          l.style.background=on?"var(--teal)":"";
+          l.style.color=on?"var(--ink)":"";
+        });
+      }
+    });
+  },{threshold:0.2}).observe(s);
+});
+// Animate cells on scroll
+const ao=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){
+      setTimeout(()=>{
+        e.target.style.opacity="1";
+        e.target.style.transform="translateY(0)";
+      },i*60);
+      ao.unobserve(e.target);
+    }
+  });
+},{threshold:0.05});
+document.querySelectorAll(".cell,.anno,.step").forEach(el=>{
+  el.style.opacity="0";
+  el.style.transform="translateY(16px)";
+  el.style.transition="opacity 0.45s ease,transform 0.45s ease";
+  ao.observe(el);
+});
+</script>
+</body>
+</html>
