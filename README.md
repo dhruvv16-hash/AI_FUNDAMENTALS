@@ -1,4 +1,4 @@
-# 🧠 AI Fundamentals & Masterclass: Hands-On Learning Lab
+#  AI Fundamentals & Masterclass: Hands-On Learning Lab
 
 Welcome to the **AI Fundamentals & Masterclass** repository! This workspace is designed as a complete, self-paced learning path to master modern Artificial Intelligence concepts—from APIs and text embeddings to Retrieval-Augmented Generation (RAG) and autonomous AI Agents.
 
@@ -6,11 +6,11 @@ This repository uniquely pairs **interactive visual web guides** with **practica
 
 ---
 
-## 📂 Repository Contents
+##  Repository Contents
 
 The workspace is organized into two main parts:
 
-### 1. 🎨 The Interactive Visual Guides (Root Directory)
+### 1.  The Interactive Visual Guides (Root Directory)
 Directly in the root folder, you will find two rich, interactive web pages built to simplify complex concepts:
 *   **[Visual Study Guide (ai_masterclass_visual_guide.html)](file:///e:/DHRUV_BACKUP/AI/ai_masterclass_visual_guide.html)**: A beautifully designed visual dashboard covering the theory of LLMs, Embeddings, RAG, Prompt Engineering, and Agentic loops with animated diagrams, sticky notes, and clean comparisons.
 *   **[Interactive Coding Lab (ai_coding_lab.html)](file:///e:/DHRUV_BACKUP/AI/ai_coding_lab.html)**: An interactive guide mapped directly to the codebase. It provides a detailed, line-by-line breakdown of every crucial code cell, showing exactly how the APIs and frameworks function under the hood.
@@ -18,7 +18,7 @@ Directly in the root folder, you will find two rich, interactive web pages built
 > [!TIP]
 > To view these guides, simply open [ai_masterclass_visual_guide.html](file:///e:/DHRUV_BACKUP/AI/ai_masterclass_visual_guide.html) or [ai_coding_lab.html](file:///e:/DHRUV_BACKUP/AI/ai_coding_lab.html) directly in any web browser (Chrome, Safari, Edge, or Firefox).
 
-### 2. 💻 The Hands-On Codebase (`/AI_Fundamentals_Data_Domain-main`)
+### 2.  The Hands-On Codebase (`/AI_Fundamentals_Data_Domain-main`)
 A full hands-on project folder containing structured Jupyter notebooks, dependencies, and datasets.
 
 *   **Chapter 1: Large Language Models (LLMs)**
@@ -40,7 +40,7 @@ A full hands-on project folder containing structured Jupyter notebooks, dependen
 
 ---
 
-## 🛠️ Project Structure
+##  Project Structure
 
 ```text
 AI/
@@ -58,7 +58,7 @@ AI/
 
 ---
 
-## 🚀 Getting Started with the Code
+##  Getting Started with the Code
 
 To run the Python notebooks locally on your machine, follow these steps:
 
@@ -102,7 +102,7 @@ jupyter notebook
 
 ---
 
-## 🎓 Learning Path Recommendation
+##  Learning Path Recommendation
 For the best learning experience, we recommend:
 1.  **Read the Concept**: Open [ai_masterclass_visual_guide.html](file:///e:/DHRUV_BACKUP/AI/ai_masterclass_visual_guide.html) in your browser and study the chapter's conceptual layout.
 2.  **Open the Notebook**: Go to the corresponding Jupyter notebook in `/AI_Fundamentals_Data_Domain-main` and execute the cells.
